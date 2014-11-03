@@ -9,8 +9,43 @@ struct Number {
 
 	void CreateNumber() {
 		//2a\ prompt for number type
+		cout << "enter number type: (BYte/DEcimal) ";
+		char typeInput[3] = "";
+		cin >> typeInput;
+
+		isDecimal = false;
+
+		if (strcmp(typeInput, "DE") == 0) {
+			isDecimal = true;
+		} else if (strcmp(typeInput, "BY") != 0) {
+			cerr << "Invalid number type.\n";
+			system("pause");
+			throw;
+		}
+
 		//2b\ prompt for sinage
+		cout << "Is this number signed? (y/n) ";
+		char signedInput[3] = "";
+		cin >> signedInput;
+
+		isSigned = false;
+
+		if (strcmp(signedInput, "y") == 0) {
+			isSigned = true;
+		}
+		else if (strcmp(signedInput, "n") != 0) {
+			cerr << "Invalid signed input.\n";
+			system("pause");
+			throw;
+		}
+
 		//2c\ prompt for value
+		cout << "enter number value: ";
+		cin >> value;
+
+		if (!isDecimal) {
+			value = ToDecimal(value, isSigned);
+		}
 	}
 
 	Number Add(Number other) {
@@ -51,7 +86,7 @@ void main() {
 
 	if (strcmp(returnInput, "DE") == 0) {
 		returnAsDec = true;
-	} else if (strcmp(returnInput, "-") != 0) {
+	} else if (strcmp(returnInput, "BY") != 0) {
 		cerr << "Invalid return type.\n";
 		system("pause");
 		return;
