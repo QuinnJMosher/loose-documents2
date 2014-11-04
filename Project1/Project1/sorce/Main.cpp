@@ -1,12 +1,13 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <cstring>
 
 using namespace std;
 
 //prototypes
 int ToDecimal(int in_value, bool in_isSigned);
-int ToBinary(int in_value, bool in_isSigned);
+string ToBinary(int in_value, bool in_isSigned);
 
 struct Number {
 	bool isDecimal;
@@ -67,11 +68,10 @@ struct Number {
 	}
 };
 
-int ToBinary(int in_value, bool in_isSigned) {
+string ToBinary(int in_value, bool in_isSigned) {
 	bool isNeg = false;
 	int power = 0;
 	int maxPower = 0;
-	int out = 0;//switch to a char array with a length divisible by 8
 	vector<bool> bitList = vector<bool>();
 
 	if (in_value < 0) {
@@ -95,9 +95,11 @@ int ToBinary(int in_value, bool in_isSigned) {
 		power--;
 	}
 
+	string out = "0000000000000000";
+
 	if (in_isSigned && isNeg) {
 		bitList.flip();
-		for (int i = (bitList.size() - 1); i >= 0; i--) {//might need to combine with the set out part
+		for (int i = (bitList.size() - 1); i >= 0; i--) {
 			if (bitList[i]) {
 				bitList[i] = false;
 			} else {
@@ -109,7 +111,15 @@ int ToBinary(int in_value, bool in_isSigned) {
 
 	for (int i = (bitList.size() - 1); i >= 0; i--) {
 		if (bitList[i]) {
-			out += pow(10, maxPower - i);
+			if (maxPower < 15) {
+				out[(15 - maxPower) + i] = '1';
+			}
+		}
+	}
+
+	if (isNeg && in_isSigned && maxPower < 15) {
+		for (int i = (15 - bitList.size()); i >= 0 ; i--) {
+			out[i] = '1';
 		}
 	}
 
@@ -117,15 +127,50 @@ int ToBinary(int in_value, bool in_isSigned) {
 }
 
 int ToDecimal(int in_value, bool in_isSigned) {
-	return 0;
+	vector<bool> bitList = vector<bool>();
+	int temp = in_value;
+	while (temp > 0) {
+		temp /= 10;
+		bitList.push_back(false);
+	}
+
+	temp = in_value;
+	for (int i = bitList.size() - 1; i >= 0; i--) {
+		if (temp % 2 == 1) {
+			bitList[i] = true;
+		}
+		temp /= 10;
+	}
+
+	if (in_isSigned && bitList[0]) {
+		bitList.flip();
+		for (int i = (bitList.size() - 1); i >= 0; i--) {
+			if (bitList[i]) {
+				bitList[i] = false;
+			}
+			else {
+				bitList[i] = true;
+				break;
+			}
+		}
+	}
+
+	int out = 0;
+
+	for (int j = 0; j < bitList.size(); j++) {
+		out += bitList[j] * pow(2, (bitList.size() - 1) - j);
+	}
+
+	return out;
 }
 
 void main() {
-	cout << ToBinary(-10, true) << endl;
+	int temp = 01101;
+	cout << ToDecimal(temp, false) << endl;
 	system("pause");
 }
 
-/* final main meathod
+/* final main method
 void main() {
 	cout << "cross-base calculator\n";
 	//1\ create Numbers
