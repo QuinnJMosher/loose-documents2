@@ -50,31 +50,33 @@ std::vector<Node*>* FindPath()
 }
 
 std::vector<Node*>* FindPathRec(Node* current, Node* end, std::vector<Node*>* visitedNodes) {
-	std::vector<Node*>* out = nullptr;
-	if ((*current).links.size() == 0) {
-		return nullptr;
-	}
-	if (current == end) {
+	std::vector<Node*>* out = nullptr; // create an array pointer to edit/return
+	if (current == end) {//check our goal condition
 		out = new std::vector<Node*>();
 		(*out).emplace_back(current);
 		return out;
 	}
-	
-	for (int i = 0; i < (*visitedNodes).size(); i++) {
+
+	if ((*current).links.size() == 0) {//make sure there are links to go to
+		return nullptr;
+	}
+
+	for (int i = 0; i < (*visitedNodes).size(); i++) {//make sure we haven't alredy been here
 		if (current == (*visitedNodes)[i]) {
 			return nullptr;
 		}
 	}
 
-	(*visitedNodes).emplace_back(current);
-	for (int i = 0; out == nullptr && i < (*current).links.size(); i++) {
-		out = FindPathRec((*current).links[i], end, visitedNodes);
+	(*visitedNodes).emplace_back(current);//add the current spot to the do not enter list before going elsewhere
+
+	for (int i = 0; out == nullptr/*if we arn't null then we found the end further down the line*/ && i < (*current).links.size()/*if we hit the end of our list then we need to back up*/; i++) {+
+		out = FindPathRec((*current).links[i], end, visitedNodes);//check each one of the links to this node
 	}
 
 	if (out != nullptr) {
-		(*out).emplace_back(current);
+		(*out).emplace_back(current); // if we're not null after the loop then we've found something and we should add ourselves to the sequence
 	} else {
-		(*visitedNodes).erase((*visitedNodes).end() - 1);
+		(*visitedNodes).erase((*visitedNodes).end() - 1); // if we're still null then we need to back up so we need to remove ourselves from the viseted list
 	}
 
 	return out;
