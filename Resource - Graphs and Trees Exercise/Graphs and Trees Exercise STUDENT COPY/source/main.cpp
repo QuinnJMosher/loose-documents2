@@ -29,9 +29,8 @@
 
 NodeMap* nodeMap;
 Player* player;
-std::vector<Node*> visitedNodes;
 
-std::vector<Node*>* FindPathRec(Node* current, Node* end);
+std::vector<Node*>* FindPathRec(Node* current, Node* end, std::vector<Node*>* visitedNodes = new std::vector<Node*>());
 
 //	THIS SECTION TO BE FILLED IN BY THE STUDENT ---------------------------------------------------------
 
@@ -43,16 +42,14 @@ std::vector<Node*>* FindPath()
 	std::vector<Node*>* path	= new std::vector<Node*>();
 
 	// YOUR CODE GOES HERE
-	visitedNodes = std::vector<Node*>();
 	path = FindPathRec(start, end);
-	visitedNodes.~vector<Node*>();
 
 	// YOUR CODE ENDS HERE
 
 	return path;
 }
 
-std::vector<Node*>* FindPathRec(Node* current, Node* end) {
+std::vector<Node*>* FindPathRec(Node* current, Node* end, std::vector<Node*>* visitedNodes) {
 	std::vector<Node*>* out = nullptr;
 	if ((*current).links.size() == 0) {
 		return nullptr;
@@ -63,20 +60,21 @@ std::vector<Node*>* FindPathRec(Node* current, Node* end) {
 		return out;
 	}
 	
-	for (int i = 0; i < visitedNodes.size(); i++) {
-		if (current = visitedNodes[i]) {
+	for (int i = 0; i < (*visitedNodes).size(); i++) {
+		if (current == (*visitedNodes)[i]) {
 			return nullptr;
 		}
 	}
 
-	visitedNodes.emplace_back(current);
+	(*visitedNodes).emplace_back(current);
 	for (int i = 0; out == nullptr && i < (*current).links.size(); i++) {
-		out = FindPathRec((*current).links[i], end);
+		out = FindPathRec((*current).links[i], end, visitedNodes);
 	}
-	visitedNodes.erase(visitedNodes.end() - 1);
 
 	if (out != nullptr) {
 		(*out).emplace_back(current);
+	} else {
+		(*visitedNodes).erase((*visitedNodes).end() - 1);
 	}
 
 	return out;
