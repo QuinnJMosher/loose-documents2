@@ -42,7 +42,7 @@ std::vector<Node*>* FindPath()
 	std::vector<Node*>* path	= new std::vector<Node*>();
 
 	// YOUR CODE GOES HERE
-	path = FindPathRec(start, end);
+	path = FindPathRec(start, end);//call to the recursive meathod (visited nodes does not need to be filled because it has a default value)
 
 	// YOUR CODE ENDS HERE
 
@@ -69,16 +69,15 @@ std::vector<Node*>* FindPathRec(Node* current, Node* end, std::vector<Node*>* vi
 
 	(*visitedNodes).emplace_back(current);//add the current spot to the do not enter list before going elsewhere
 
-	for (int i = 0; out == nullptr/*if we arn't null then we found the end further down the line*/ && i < (*current).links.size()/*if we hit the end of our list then we need to back up*/; i++) {+
+	for (int i = 0; i < (*current).links.size()/*if we hit the end of our list then we need to back up*/; i++) {
 		out = FindPathRec((*current).links[i], end, visitedNodes);//check each one of the links to this node
+		if (out != nullptr) {//if we arn't null then we found the end further down the line
+			(*out).emplace_back(current); // since we found the end then we need to add ourselves to the sequence before passing the list back
+			return out;
+		}
 	}
-
-	if (out != nullptr) {
-		(*out).emplace_back(current); // if we're not null after the loop then we've found something and we should add ourselves to the sequence
-	} else {
-		(*visitedNodes).erase((*visitedNodes).end() - 1); // if we're still null then we need to back up so we need to remove ourselves from the viseted list
-	}
-
-	return out;
+	// if we need to back up then we will also need to remove ourselves from the viseted list before doing so;
+	(*visitedNodes).erase((*visitedNodes).end() - 1); 
+	return nullptr;
 }
 //	-----------------------------------------------------------------------------------------------------
