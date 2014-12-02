@@ -12,8 +12,7 @@
 class CFactory
 {
 public:
-	CFactory(void);
-	~CFactory(void);
+	static CFactory* getInstance();
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// <summary>	Creates an object. </summary>
@@ -39,6 +38,11 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	void AddMakeFunction(const char* name, TMakeFunction func);
+protected:
+	CFactory(void);
+	~CFactory(void);
+
+	static CFactory* instance;
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,8 +61,3 @@ private:
 
 	SPair makeFunctions[256];
 };
-
-
-/// <summary> Global factory variable, could use a singleton instead.  </summary>
-
-extern CFactory g_Factory;

@@ -1,6 +1,7 @@
 #include "CFactory.h"
 #include "CPlayer.h"
 #include "CLevel.h"
+#include "car.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// <summary>	Register types. 
@@ -12,8 +13,10 @@
 
 void RegisterTypes()
 {
-	g_Factory.AddMakeFunction("Player", MakeCPlayer);
-	g_Factory.AddMakeFunction("Sprite", MakeCSprite);
+	CFactory* g_Factory = CFactory::getInstance();
+	(*g_Factory).AddMakeFunction("Player", MakeCPlayer);
+	(*g_Factory).AddMakeFunction("Sprite", MakeCSprite);
+	(*g_Factory).AddMakeFunction("Car", MakeCar);
 }
 
 
@@ -33,5 +36,6 @@ int main()
 	//Save Level
 	level.SaveLevel("test.txt");
 
+	system("pause");
 	return 0;
 }

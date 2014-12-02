@@ -13,6 +13,7 @@ CLevel::~CLevel(void)
 
 void CLevel::LoadLevel(const char* filename)
 {
+	CFactory* g_Factory = CFactory::getInstance();
 	FILE* file = fopen(filename, "r");
 
 	while(!feof(file))
@@ -22,7 +23,7 @@ void CLevel::LoadLevel(const char* filename)
 		fgets(line, 256, file);
 		trimWhiteSpace(line);
 
-		IObject* obj = g_Factory.CreateObject(line);
+		IObject* obj = (*g_Factory).CreateObject(line);
 		
 		obj->Load(file);
 		this->Insert(obj);

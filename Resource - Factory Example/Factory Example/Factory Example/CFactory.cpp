@@ -1,7 +1,7 @@
 #include "CFactory.h"
 #include <cstring>
 
-CFactory g_Factory;
+CFactory* CFactory::instance = nullptr;
 
 CFactory::CFactory(void)
 {
@@ -43,4 +43,12 @@ void CFactory::AddMakeFunction(const char* name, CFactory::TMakeFunction func)
 			return;
 		}
 	}
+}
+
+CFactory* CFactory::getInstance() {
+	if (instance == nullptr) {
+		instance = new CFactory();
+	}
+
+	return instance;
 }
