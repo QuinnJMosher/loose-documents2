@@ -48,7 +48,23 @@ void Cat::OnMessage(Message& msg)
 
 	case 2:
 		if (this->m_isAlive == false) {
-			initWithFile("images/cat1.png");
+			switch ((rand() % 4) + 1) {
+			case 1:
+				initWithFile("images/cat1.png");
+				break;
+			case 2:
+				initWithFile("images/cat2.png");
+				break;
+			case 3:
+				initWithFile("images/cat3.png");
+				break;
+			case 4:
+				initWithFile("images/cat4.png");
+				break;
+			default:
+				initWithFile("images/crate_sideup.png");
+				break;
+			}
 			m_position = msg.data;
 			m_isAlive = true;
 			msg.consumed = true;
@@ -66,6 +82,6 @@ void Cat::draw()
 	if (m_isAlive == false || m_sprite < 0) {
 		return;
 	}
-
+	MoveSprite(m_sprite, m_position.x, m_position.y);
 	DrawSprite(m_sprite);
 }
