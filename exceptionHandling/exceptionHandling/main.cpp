@@ -1,48 +1,61 @@
 #include <iostream>
 #include <string>
+#include "Point.h"
+#include "ErrorHandeling.h"
 using namespace std;
 
-enum ErrCode {
-	NO_ERROR,
-	UNIDENTIFIED_ERROR
-};
-
-class Exception {
-public:
-	Exception() {	
-		errType = ErrCode::UNIDENTIFIED_ERROR;
-		errMessage = "Unknown Error"; 
-	}
-
-	Exception(ErrCode in_errType, string in_errMessage) {
-		errType = in_errType;
-		errMessage = in_errMessage;
-	}
-
-	~Exception() { }
-
-	ErrCode errType;
-	string errMessage;
-};
+void run();
+void AFileThing();
 
 int main() {
+	ErrCode errcode = ErrCode::NO_ERROR;
 	try {
 		run();//start the program proper
 	}
-	catch (Exception exec) {
-		cout << exec.errType << ": " << exec.errMessage << endl;
+	catch (Exception except) {
+		errcode = except.errType;
+		cout << errcode << ": " << except.errMessage << endl;
+	}
+	catch (exception except) {
+		errcode = ErrCode::STD_EXCEPTION;
+		cout << except.what() << endl;
 	}
 	catch (ErrCode error) {
-		cout << error << ": No message given\n";
-		return error;
+		errcode = error;
+		cout << errcode << ": No message given\n";
 	}
 	catch (...) {
-		cout << ErrCode::UNIDENTIFIED_ERROR << ": No message or ErrCode given\n";
-		return ErrCode::UNIDENTIFIED_ERROR;
+		errcode = ErrCode::UNIDENTIFIED_ERROR;
+		cout << errcode << ": No message or ErrCode given\n";
 	}
-	return ErrCode::NO_ERROR;
+	system("pause");
+	return errcode;
 }
 
 void run() {
-	//stuff
+	/*try {
+		AFileThing();
+	}
+	catch (Exception except) {
+		throw Exception(except.errType, except.errMessage + " \"AFileThing\" threw this error.");
+	}
+	catch (exception except) {
+		throw except;
+	}
+	catch (ErrCode error) {
+		throw Exception(error, "\"AFileThing\" threw this error.");
+	}
+	catch (...) {
+		throw Exception(ErrCode::UNIDENTIFIED_ERROR, "\"AFileThing\" threw this error.");
+	}
+	/**/
+	Point* ptPtr = nullptr;
+	(*ptPtr).DoAthing();
+	/**/
+}
+
+void AFileThing() {
+	throw Exception(ErrCode::FILE_NOT_FOUND_ERROR, "Could not find \"whatever.txt\" in directory \"C:\\here_it_is\"");
+	//throw ErrCode::FILE_IS_CORRUPT_ERROR;
+	//throw "oh noes!";
 }
